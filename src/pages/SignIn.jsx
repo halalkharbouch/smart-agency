@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
   const [formData, setFormData] = useState({
@@ -9,6 +12,7 @@ function SignIn() {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const { email, password } = formData;
 
@@ -17,6 +21,23 @@ function SignIn() {
       ...prevFormData,
       [e.target.id]: e.target.value,
     }));
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      if (userCredentials.user) {
+        navigate('/');
+      }
+    } catch (error) {
+      toast.error('Something went wrong with the login');
+    }
   }
   return (
     <section>
@@ -80,6 +101,7 @@ function SignIn() {
               </p>
             </div>
             <button
+              onClick={onSubmit}
               className="w-full bg-blue-600 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out text-white px-7 py-3"
               type="submit"
             >

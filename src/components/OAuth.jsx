@@ -16,8 +16,6 @@ function OAuth() {
       const docRef = doc(db, 'users', user.uid);
       const docSnap = await getDoc(docRef);
 
-      console.log(user);
-
       if (docSnap.exists()) {
         navigate('/');
         toast.success('Logged in with Google');
