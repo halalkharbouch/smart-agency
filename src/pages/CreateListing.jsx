@@ -122,6 +122,7 @@ function CreateListing() {
     });
 
     const formDataCopy = {
+      userRef: auth.currentUser.uid,
       ...formData,
       imgUrls,
       geolocation,
@@ -134,7 +135,7 @@ function CreateListing() {
     delete formDataCopy.latitude;
     delete formDataCopy.longitude;
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
-    
+
     setLoading(false);
     toast.success('Listing saved');
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
